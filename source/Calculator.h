@@ -10,16 +10,13 @@
 #include "Exceptions.h"
 
 class Calculator {
-	queue<Lexeme> post;
 public:
-	Calculator(queue<Lexeme> _post) : post(_post) {}
-
-	double calculate() {
-		TDynamicStack<double> st;
+	queue<double> calculate(queue<Lexeme> post) {
+		TVectorStack<double> st;
+		queue<double> res;
 		Lexeme lex;
 		OPFactory OPF;
 		Operation* op = OPF.op(" ");
-		double v;
 		double lo, ro;
 		while (!post.empty()) {
 			lex = post.front();
@@ -28,30 +25,34 @@ public:
 			case OP:
 				op = OPF.op(lex.getStr());
 				if (st.empty()) throw new ArgsEx(lex, "missing arg");
-				ro = st.pop();
+				ro = st.top(); st.pop();
 				if (st.empty()) throw new ArgsEx(lex, "missing arg");
-				lo = st.pop();
-				v = op->calc(lo, ro);
+				lo = st.top(); st.pop();
+				st.push(op->calc(lo, ro));
 				break;
 			case UNOP:
 				op = OPF.op(lex.getStr());
 				if (st.empty()) throw new ArgsEx(lex, "missing arg");
-				ro = st.pop();
-				v = op->calc(0, ro);
+				ro = st.top(); st.pop();
+				st.push(op->calc(0, ro));
 				break;
 			case INT:
-				v = stoi(lex.getStr());
+				st.push(stoi(lex.getStr()));
 				break;
 			case DBL:
-				v = stod(lex.getStr());
+				st.push(stod(lex.getStr()));
+				break;
+			case EOE:
+				res.push(st.top());
+				st.pop();
 				break;
 			default:
 				break;
 			}
-			st.push(v);
 			post.pop();
 		}
-		delete op;
-		return st.pop();
+		delete op; 
+		if (!st.empty()) throw new ArgsEx(lex, "missing operation");
+		return res;
 	}
 };

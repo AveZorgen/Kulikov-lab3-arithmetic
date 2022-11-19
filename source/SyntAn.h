@@ -5,36 +5,9 @@
 #include "Lexeme.h"
 #include "Exceptions.h"
 
-template<typename T>
-void print(queue<T> t) {
-	cout << "Q| ";
-	while (!t.empty()) {
-		cout << t.front() << " ";
-		t.pop();
-	}
-	cout << "\n";
-}
-
-template<typename T>
-void printS(TVectorStack<T> t) {
-	TVectorStack<T> c;
-	cout << "S| ";
-	while (!t.empty()) {
-		c.push(t.top());
-		t.pop();
-	}
-	while (!c.empty()) {
-		cout << c.top() << " ";
-		c.pop();
-	}
-	cout << "\n";
-}
-
 
 class SyntAn {
-	queue<Lexeme> inf;
-
-	void bracletsCheck() {
+	void bracletsCheck(queue<Lexeme> inf) {
 		queue<Lexeme> ch(inf);
 		int o = 0, c = 0;
 		Lexeme lex;
@@ -52,13 +25,12 @@ class SyntAn {
 			prev = lex;
 			ch.pop();
 		}
+		if (lex.getType() != EOE) throw new OPConflict(lex, "missing ;");
 		if (o > c) throw new BracketEx({}, "Unclosed (");
 	}
 
 public:
-	SyntAn(queue<Lexeme> _inf) : inf(_inf) {}
-
-	queue<Lexeme> toPostfix() {
+	queue<Lexeme> toPostfix(queue<Lexeme> inf) {
 		queue<Lexeme> res;
 		TVectorStack<Lexeme> st;
 		Lexeme lex, stLex;
@@ -99,13 +71,12 @@ public:
 		return res;
 	}
 
-	queue<Lexeme> toPostfixE() {
-		bracletsCheck();
+	queue<Lexeme> toPostfixE(queue<Lexeme> inf) {
+		bracletsCheck(inf);
 
 		queue<Lexeme> res;
 		TVectorStack<Lexeme> st;
 		Lexeme lex, stLex;
-		int o = 0, c = 0;
 		while (!inf.empty()) {
 			lex = inf.front();
 
@@ -130,10 +101,59 @@ public:
 			inf.pop();
 		}
 		while (!st.empty()) {
+			cout << "here\n";
+			printS(st);	print(res);
 			stLex = st.top(); st.pop();
-			res.push(stLex);
+			res.push(stLex); 
 		}
 		return res;
 	}
 
+	queue<Lexeme> perform(queue<Lexeme> inf) {
+		bracletsCheck(inf);
+
+		queue<Lexeme> res;
+		TVectorStack<Lexeme> st;
+		Lexeme lex, stLex;
+
+		while (!inf.empty()) {
+			lex = inf.front();
+			while (lex.getType() != EOE) {
+				if (lex.getType() == INT || lex.getType() == DBL) {
+					res.push(lex);
+					//printS(st);	print(res);
+				}
+				if (lex.getType() == OP || lex.getType() == UNOP) {
+					if (lex.getStr() != "(")
+						while (!st.empty()) {
+							stLex = st.top(); st.pop();
+							if (lex.getPriority() <= stLex.getPriority()) {
+								res.push(stLex);
+								//printS(st);	print(res);
+							}
+							else {
+								if (stLex.getStr() != "(")
+									st.push(stLex);
+								//printS(st);	print(res);
+								break;
+							}
+						}
+					if (lex.getStr() != ")")
+						st.push(lex);
+					//printS(st);	print(res);
+				}
+				inf.pop();
+				lex = inf.front();
+			}
+			while (!st.empty()) {
+				//cout << "here";
+				//printS(st);	print(res);
+				stLex = st.top(); st.pop();
+				res.push(stLex); 
+			}
+			inf.pop();
+			res.push(lex);
+		}
+		return res;
+	}
 };

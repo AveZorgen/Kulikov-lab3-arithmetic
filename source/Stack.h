@@ -38,3 +38,31 @@ public:
 	void pop() { mem.pop_back(); Itop--; }
 	void push(const T& val) { mem.push_back(val); Itop++; }
 };
+
+#include <queue>
+using namespace std;
+
+template<typename T>
+void print(queue<T> t) {
+	cout << "Q| ";
+	while (!t.empty()) {
+		cout << t.front() << " ";
+		t.pop();
+	}
+	cout << "\n";
+}
+
+template<typename T>
+void printS(TVectorStack<T> t) {
+	TVectorStack<T> c;
+	cout << "S| ";
+	while (!t.empty()) {
+		c.push(t.top());
+		t.pop();
+	}
+	while (!c.empty()) {
+		cout << c.top() << " ";
+		c.pop();
+	}
+	cout << "\n";
+}

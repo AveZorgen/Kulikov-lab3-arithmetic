@@ -11,22 +11,31 @@ using namespace std;
 
 
 int main() {
-	string str = "2-.5"; //"2-3"  "-5+(-1+3)"  "(-123 - +10)/-50 * \t- 30" "((3 - -5) * (4-2))" "3 - * - 5"
-	cout << .2 << endl;
-	cout << str << endl << endl;
+	string str = "(-123 - +10)/-50 * \t- 30; ((3 - -5) * (4-2));"; //"2;3-5;" "2-3"  "-5+(-1+3)"  "(-123 - +10)/-50 * \t- 30" "((3 - -5) * (4-2))" "3 - * - 5" "-5+-1+3"
+	//str = "2 4 -;";// хз как отлавливать, но в польскую переводит нормально
+	//cout << str << endl << endl;
 	queue<Lexeme> lex_res, synt_res;
-	double res = 0;
-	LexAn LA(str);
+	queue<double> res;
+	LexAn LA;
+	SyntAn SA;
+	Calculator C;
 	try {
-		lex_res = LA.lex(); print(lex_res); cout << endl;
-		SyntAn SA(lex_res);
-		synt_res = SA.toPostfixE(); print(synt_res); cout << endl;
-		Calculator C(synt_res);
-		res = C.calculate(); cout << res;
+		lex_res = LA.lex(str); print(lex_res); cout << endl;
+		synt_res = SA.perform(lex_res); print(synt_res); cout << endl;
+		res = C.calculate(synt_res); print(res);
 	}
 	catch (IException* e) {
 		e->show();
 	}
+
+	//print(LA.lex(" - - 2"));
+	//print(LA.lex(" - 2"));
+	//print(LA.lex(" 3 - 2"));
+	//print(LA.lex(" 3 + - 2"));
+	//print(LA.lex(" 3 ) - - 2"));
+	//print(LA.lex(" 3 * - 2"));
+	//print(LA.lex(" 3 ) * - 2"));
+	//print(LA.lex(" 3 ) - 2"));
 
 	return 0;
 }

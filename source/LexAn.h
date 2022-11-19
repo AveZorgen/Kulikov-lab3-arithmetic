@@ -8,11 +8,8 @@
 #include "Exceptions.h"
 
 class LexAn {
-	string inp;
 public:
-	LexAn(string _inp) : inp(_inp) {}
-
-	queue<Lexeme> lex() {
+	queue<Lexeme> lex(string inp) {
 		queue<Lexeme> res;
 		inp = inp + " ";
 		int i, start;
@@ -39,10 +36,17 @@ public:
 					st = 3;
 					break;
 				}
+				if (c == ')') {
+					start = i;
+					buff = c;
+					res.push({ buff,OP,start });
+					st = 0;
+					break;
+				}
 				if (OPS.find(c) != string::npos) {
 					start = i;
 					buff = c;
-					if (res.empty() && UNOPS.find(c) != string::npos)
+					if (res.empty() && UNOPS.find(c) != string::npos) ////empty не считает начало ;  "-2-3;3+2" = OK, "-2-3;-3+2" - НЕ ОК
 						res.push({ buff,UNOP,start });
 					else
 						res.push({ buff,OP,start });
@@ -51,13 +55,27 @@ public:
 				}
 				if (sep.find(c) != string::npos) {
 					buff = "";
+					break;
+				}
+				if (c == ';') {
+					start = i;
+					buff = c;
+					res.push({ buff, EOE, start });
 					st = 2;
 					break;
 				}
-				throw new LexEx({ {c}, NONE, i }, "Unsupported lex");
+				throw new LexEx({ {c}, NONE, i }, "Unexpected lex");
 			case 1:
 				if (c >= '0' && c <= '9') {
 					buff += c;
+					break;
+				}
+				if (c == ')') {
+					res.push({ buff, INT, start });
+					start = i;
+					buff = c;
+					res.push({ buff, OP, start });
+					st = 0;
 					break;
 				}
 				if (OPS.find(c) != string::npos) {
@@ -65,7 +83,7 @@ public:
 					start = i;
 					buff = c;
 					res.push({ buff, OP, start });
-					st = 0;
+					st = 2;
 					break;
 				}
 				if (sep.find(c) != string::npos) {
@@ -79,7 +97,15 @@ public:
 					st = 3;
 					break;
 				}
-				throw new LexEx({ {c}, NONE, i }, "Unsupported lex");
+				if (c == ';') {
+					res.push({ buff, INT, start });
+					start = i;
+					buff = c;
+					res.push({ buff, EOE, start });
+					st = 0;
+					break;
+				}
+				throw new LexEx({ {c}, NONE, i }, "Unexpected lex");
 			case 2: 
 				if (c >= '0' && c <= '9') {
 					start = i;
@@ -110,13 +136,26 @@ public:
 					buff = "";
 					break;
 				}
-				throw new LexEx({ {c}, NONE, i }, "Unsupported lex");
+				if (c == ';') {
+					start = i;
+					buff = c;
+					res.push({ buff, EOE, start });
+					break;
+				}
+				throw new LexEx({ {c}, NONE, i }, "Unexpected lex");
 			case 3:
+				if (c >= '0' && c <= '9') {
+					buff += c;
+					st = 4;
+					break;
+				}
+				throw new LexEx({ {c}, NONE, i }, "Unexpected lex");
+			case 4:
 				if (c >= '0' && c <= '9') {
 					buff += c;
 					break;
 				}
-				if (OPS.find(c) != string::npos) {
+				if (c == ')') {
 					res.push({ buff, DBL, start });
 					start = i;
 					buff = c;
@@ -124,9 +163,25 @@ public:
 					st = 0;
 					break;
 				}
+				if (OPS.find(c) != string::npos) {
+					res.push({ buff, DBL, start });
+					start = i;
+					buff = c;
+					res.push({ buff, OP, start });
+					st = 2;
+					break;
+				}
 				if (sep.find(c) != string::npos) {
 					res.push({ buff, DBL, start });
 					start = i;
+					st = 0;
+					break;
+				}
+				if (c == ';') {
+					res.push({ buff, DBL, start });
+					start = i;
+					buff = c;
+					res.push({ buff, EOE, start });
 					st = 0;
 					break;
 				}

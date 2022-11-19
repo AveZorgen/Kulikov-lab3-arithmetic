@@ -18,6 +18,7 @@ public:
 		if (l.type == UNOP) os << "UNOP";
 		if (l.type == INT) os << "INT";
 		if (l.type == DBL) os << "DBL";
+		if (l.type == EOE) os << "EOE";
 		if (l.type == NONE) os << "NONE";
 		os << ", " << l.start << "}";
 		return os;
