@@ -11,6 +11,7 @@
 
 class Calculator {
 public:
+	//to use with no ; need to res.push(st.top()); st.pop(); when post.empty
 	queue<double> calculate(queue<Lexeme> post) {
 		TVectorStack<double> st;
 		queue<double> res;

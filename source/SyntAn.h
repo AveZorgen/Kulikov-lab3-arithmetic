@@ -7,7 +7,8 @@
 
 
 class SyntAn {
-	void bracletsCheck(queue<Lexeme> inf) {
+	//to use with no ; need to del EOE check
+	void Validate(queue<Lexeme> inf) {
 		queue<Lexeme> ch(inf);
 		int o = 0, c = 0;
 		Lexeme lex;
@@ -30,6 +31,7 @@ class SyntAn {
 	}
 
 public:
+	//; unsupported
 	queue<Lexeme> toPostfix(queue<Lexeme> inf) {
 		queue<Lexeme> res;
 		TVectorStack<Lexeme> st;
@@ -71,8 +73,9 @@ public:
 		return res;
 	}
 
+	//; unsupported
 	queue<Lexeme> toPostfixE(queue<Lexeme> inf) {
-		bracletsCheck(inf);
+		Validate(inf);
 
 		queue<Lexeme> res;
 		TVectorStack<Lexeme> st;
@@ -110,7 +113,7 @@ public:
 	}
 
 	queue<Lexeme> perform(queue<Lexeme> inf) {
-		bracletsCheck(inf);
+		Validate(inf);
 
 		queue<Lexeme> res;
 		TVectorStack<Lexeme> st;

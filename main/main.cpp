@@ -11,9 +11,8 @@ using namespace std;
 
 
 int main() {
-	string str = "(-123 - +10)/-50 * \t- 30; ((3 - -5) * (4-2));"; //"2;3-5;" "2-3"  "-5+(-1+3)"  "(-123 - +10)/-50 * \t- 30" "((3 - -5) * (4-2))" "3 - * - 5" "-5+-1+3"
-	//str = "2 4 -;";// хз как отлавливать, но в польскую переводит нормально
-	//cout << str << endl << endl;
+	string str = "(-123 - +10)/-50 * \t- 30; -5+(-1+3);"; //"2;3-5;" "2-3"  "-5+(-1+3)"  "(-123 - +10)/-50 * \t- 30" "((3 - -5) * (4-2))" "3 - * - 5" "-5+-1+3"
+	//str = "2 4 -;";// correct to postfix but infix btw incorrect
 	queue<Lexeme> lex_res, synt_res;
 	queue<double> res;
 	LexAn LA;
@@ -36,7 +35,9 @@ int main() {
 	//print(LA.lex(" 3 * - 2"));
 	//print(LA.lex(" 3 ) * - 2"));
 	//print(LA.lex(" 3 ) - 2"));
+	//print(LA.lex(" 5 + ( - 1"));
 
+	
 	return 0;
 }
 
@@ -45,8 +46,8 @@ int main() {
 * синт V
 * ошибки V
 * double V
-* 3+2;3-1; X
-* abc-10; abc-2; X
+* 3+2;3-1; V
+* abc=10; abc-2; X
 * f(a,b): a+b; //некая польская запись с именем f /// f(10,20);f(10,40); X
 * if E then <op>; X
 */

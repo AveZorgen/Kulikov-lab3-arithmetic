@@ -46,7 +46,7 @@ public:
 				if (OPS.find(c) != string::npos) {
 					start = i;
 					buff = c;
-					if (res.empty() && UNOPS.find(c) != string::npos) ////empty не считает начало ;  "-2-3;3+2" = OK, "-2-3;-3+2" - НЕ ОК
+					if (res.empty() && UNOPS.find(c) != string::npos)
 						res.push({ buff,UNOP,start });
 					else
 						res.push({ buff,OP,start });
@@ -102,7 +102,7 @@ public:
 					start = i;
 					buff = c;
 					res.push({ buff, EOE, start });
-					st = 0;
+					st = 2;
 					break;
 				}
 				throw new LexEx({ {c}, NONE, i }, "Unexpected lex");
@@ -125,13 +125,14 @@ public:
 					res.push({ buff, UNOP, start });
 					break;
 				}
-				else if (OPS.find(c) != string::npos) {
-						start = i;
-						buff = c;
-						res.push({ buff, OP, start });
-						st = 0;
-						break;
-					}
+				if (OPS.find(c) != string::npos) {
+					start = i;
+					buff = c;
+					res.push({ buff, OP, start });
+					if (c == ')') st = 0;
+					else st = 2;
+					break;
+				}
 				if (sep.find(c) != string::npos) {
 					buff = "";
 					break;
@@ -182,7 +183,7 @@ public:
 					start = i;
 					buff = c;
 					res.push({ buff, EOE, start });
-					st = 0;
+					st = 2;
 					break;
 				}
 			default:
