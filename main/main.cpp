@@ -12,7 +12,6 @@ using namespace std;
 
 int main() {
 	string str = "(-123 - +10)/-50 * \t- 30; -5+(-1+3);"; //"2;3-5;" "2-3"  "-5+(-1+3)"  "(-123 - +10)/-50 * \t- 30" "((3 - -5) * (4-2))" "3 - * - 5" "-5+-1+3"
-	//str = "2 4 -;";// correct to postfix but infix btw incorrect
 	queue<Lexeme> lex_res, synt_res;
 	queue<double> res;
 	LexAn LA;

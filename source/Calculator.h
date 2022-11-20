@@ -25,15 +25,15 @@ public:
 			switch (lex.getType()) {
 			case OP:
 				op = OPF.op(lex.getStr());
-				if (st.empty()) throw new ArgsEx(lex, "missing arg");
+				if (st.empty()) throw new ArgsEx(lex, "Missing arg");
 				ro = st.top(); st.pop();
-				if (st.empty()) throw new ArgsEx(lex, "missing arg");
+				if (st.empty()) throw new ArgsEx(lex, "Missing arg");
 				lo = st.top(); st.pop();
 				st.push(op->calc(lo, ro));
 				break;
 			case UNOP:
 				op = OPF.op(lex.getStr());
-				if (st.empty()) throw new ArgsEx(lex, "missing arg");
+				if (st.empty()) throw new ArgsEx(lex, "Missing arg");
 				ro = st.top(); st.pop();
 				st.push(op->calc(0, ro));
 				break;
@@ -53,7 +53,7 @@ public:
 			post.pop();
 		}
 		delete op; 
-		if (!st.empty()) throw new ArgsEx(lex, "missing operation");
+		if (!st.empty()) throw new ArgsEx(lex, "Missing operation");
 		return res;
 	}
 };

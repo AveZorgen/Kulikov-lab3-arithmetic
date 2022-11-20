@@ -9,12 +9,11 @@
 class SyntAn {
 	//to use with no ; need to del EOE check
 	void Validate(queue<Lexeme> inf) {
-		queue<Lexeme> ch(inf);
 		int o = 0, c = 0;
 		Lexeme lex;
 		Lexeme prev;
-		while (!ch.empty()) {
-			lex = ch.front();
+		while (!inf.empty()) {
+			lex = inf.front();
 
 			if (lex.getStr() == "(") o++;
 			else if (lex.getStr() == ")") c++;
@@ -22,11 +21,13 @@ class SyntAn {
 
 			if (prev.getType() == UNOP && lex.getType() == OP) throw new OPConflict(lex, "OP after UNOP");
 			//else if (prev.getType() == OP && lex.getType() == OP) throw new OPConflict(lex, "OP after OP"); //не считать () за OP
+			if ((prev.getType() == INT || prev.getType() == DBL) &&
+				(lex.getType() == INT || lex.getType() == DBL)) throw new ArgsEx(lex, "Extra arg");
 
 			prev = lex;
-			ch.pop();
+			inf.pop();
 		}
-		if (lex.getType() != EOE) throw new OPConflict(lex, "missing ;");
+		if (lex.getType() != EOE) throw new OPConflict(lex, "Missing ;");
 		if (o > c) throw new BracketEx({}, "Unclosed (");
 	}
 
