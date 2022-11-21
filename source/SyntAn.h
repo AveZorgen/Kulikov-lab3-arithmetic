@@ -32,7 +32,7 @@ class SyntAn {
 	}
 
 public:
-	//; unsupported
+	//; unsupported // old base version
 	queue<Lexeme> toPostfix(queue<Lexeme> inf) {
 		queue<Lexeme> res;
 		TVectorStack<Lexeme> st;
@@ -74,7 +74,6 @@ public:
 		return res;
 	}
 
-	//; unsupported
 	queue<Lexeme> toPostfixE(queue<Lexeme> inf) {
 		Validate(inf);
 
@@ -87,14 +86,14 @@ public:
 			if (lex.getType() == INT || lex.getType() == DBL) {
 				res.push(lex);
 			}
-			if (lex.getType() == OP || lex.getType() == UNOP) {
+			if (lex.getType() == OP || lex.getType() == UNOP || lex.getType() == EOE) {
 				if (lex.getStr() != "(")
 					while (!st.empty()) {
 						stLex = st.top(); st.pop();
-						if (lex.getPriority() <= stLex.getPriority())
+						if ((lex.getPriority() <= stLex.getPriority()) && (stLex.getType() != EOE))
 							res.push(stLex);
 						else {
-							if (stLex.getStr() != "(")
+							if (!(stLex.getStr() == "(" && lex.getStr() == ")"))
 								st.push(stLex);
 							break;
 						}
@@ -105,8 +104,6 @@ public:
 			inf.pop();
 		}
 		while (!st.empty()) {
-			cout << "here\n";
-			printS(st);	print(res);
 			stLex = st.top(); st.pop();
 			res.push(stLex); 
 		}

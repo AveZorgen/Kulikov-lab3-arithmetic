@@ -33,6 +33,9 @@ public:
 		if (type == UNOP) {
 			if (str == "+" || str == "-") return 4;
 		}
-		return -1;
+		if (type == EOE) {
+			return -1;
+		}
+		return -2;
 	}
 };
