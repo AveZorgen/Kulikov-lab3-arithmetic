@@ -136,7 +136,7 @@ public:
 								//printS(st);	print(res);
 							}
 							else {
-								if (stLex.getStr() != "(")
+								if (!(stLex.getStr() == "(" && lex.getStr() == ")"))
 									st.push(stLex);
 								//printS(st);	print(res);
 								break;
