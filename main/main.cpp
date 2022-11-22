@@ -2,10 +2,8 @@
 #include <iostream>
 
 #include "Stack.h"
-#include "LexAn.h"
-#include "SyntAn.h"
-#include "Calculator.h"
 #include "Exceptions.h"
+#include "Arithmetic.h"
 
 using namespace std;
 
@@ -14,13 +12,12 @@ int main() {
 	string str = "(-123 - +10)/-50 * \t- 30; -5+(-1+3);"; //"2;3-5;" "2-3"  "-5+(-1+3)"  "(-123 - +10)/-50 * \t- 30" "((3 - -5) * (4-2))" "3 - * - 5" "-5+-1+3"
 	queue<Lexeme> lex_res, synt_res;
 	queue<double> res;
-	LexAn LA;
-	SyntAn SA;
-	Calculator C;
+	Arithmetic a;
 	try {
-		lex_res = LA.lex(str); print(lex_res); cout << endl;
-		synt_res = SA.perform(lex_res); print(synt_res); cout << endl;
-		res = C.calculate(synt_res); print(res);
+		lex_res = a.lex(str); print(lex_res); cout << endl;
+		a.Validate(lex_res);
+		synt_res = a.toModifiedPostfix(lex_res); print(synt_res); cout << endl;
+		res = a.calculate(synt_res); print(res);
 	}
 	catch (IException* e) {
 		e->show();
