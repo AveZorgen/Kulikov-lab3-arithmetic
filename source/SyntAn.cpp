@@ -11,6 +11,7 @@ void Arithmetic::Validate(queue<Lexeme> inf) {
 		Lexeme prev;
 		while (!inf.empty()) {
 			lex = inf.front();
+			inf.pop();
 
 			if (lex.getStr() == "(") o++;
 			else if (lex.getStr() == ")") c++;
@@ -24,10 +25,15 @@ void Arithmetic::Validate(queue<Lexeme> inf) {
 				if (!init(lex.getStr()))
 					store(lex.getStr(), 0);
 			}
-			//E OP V = E; not OK
+
+			if (lex.getStr() == "=" && prev.getType() != VAR) throw new ArgsEx(lex, "Assignment to not value");
+
+			if (lex.getType() == VAR)
+				if (!inf.empty() && inf.front().getStr() == "=")
+					if (!(prev.getType() == NONE || prev.getType() == EOE))
+						throw new OPConflict(inf.front(), "Assignment should be at the beginning");
 
 			prev = lex;
-			inf.pop();
 		}
 		if (lex.getType() != EOE) throw new OPConflict(lex, "Missing ;");
 		if (o > c) throw new BracketEx({}, "Unclosed (");

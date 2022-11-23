@@ -48,7 +48,7 @@ queue<double> Arithmetic::calculate(queue<Lexeme> post) {
 				st.push(stod(lex.getStr()));
 				post.pop();
 				break;
-			case VAR: //= не инициализирует
+			case VAR:
 				st.push(load(lex.getStr()));
 				post.pop();
 				break;
