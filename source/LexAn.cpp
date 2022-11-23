@@ -27,6 +27,14 @@ queue<Lexeme> Arithmetic::lex(string inp) {
 					st = 1;
 					break;
 				}
+				if (c == '_' ||
+					c >= 'A' && c <= 'Z' ||
+					c >= 'a' && c <= 'z') {
+					start = i;
+					buff = c;
+					st = 5;
+					break;
+				}
 				if (c == '.') {
 					start = i;
 					buff = "0.";
@@ -110,6 +118,14 @@ queue<Lexeme> Arithmetic::lex(string inp) {
 					st = 1;
 					break;
 				}
+				if (c == '_' ||
+					c >= 'A' && c <= 'Z' ||
+					c >= 'a' && c <= 'z') {
+					start = i;
+					buff = c;
+					st = 5;
+					break;
+				}
 				if (c == '.') {
 					start = i;
 					buff = "0.";
@@ -183,6 +199,53 @@ queue<Lexeme> Arithmetic::lex(string inp) {
 					st = 2;
 					break;
 				}
+				throw new LexEx({ {c}, NONE, i }, "Unexpected lex");
+			case 5:
+				if (c >= '0' && c <= '9' ||
+					c == '_' ||
+					c >= 'A' && c <= 'Z' ||
+					c >= 'a' && c <= 'z') {
+					buff += c;
+					break;
+				}
+				if (c == ')') {
+					res.push({ buff, VAR, start });
+					start = i;
+					buff = c;
+					res.push({ buff, OP, start });
+					st = 0;
+					break;
+				}
+				if (OPS.find(c) != string::npos) {
+					res.push({ buff, VAR, start });
+					start = i;
+					buff = c;
+					res.push({ buff, OP, start });
+					st = 2;
+					break;
+				}
+				if (sep.find(c) != string::npos) {
+					res.push({ buff, VAR, start });
+					start = i;
+					st = 0;
+					break;
+				}
+				if (c == '.') {
+					res.push({ buff, VAR, start });
+					start = i;
+					buff = "0.";
+					st = 3;
+					break;
+				}
+				if (c == ';') {
+					res.push({ buff, VAR, start });
+					start = i;
+					buff = c;
+					res.push({ buff, EOE, start });
+					st = 2;
+					break;
+				}
+				throw new LexEx({ {c}, NONE, i }, "Unexpected lex");
 			default:
 				break;
 			}

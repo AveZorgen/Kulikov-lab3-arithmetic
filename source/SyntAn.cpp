@@ -77,7 +77,7 @@ queue<Lexeme> Arithmetic::toCanonicPostfix(queue<Lexeme> inf) {
 		while (!inf.empty()) {
 			lex = inf.front();
 
-			if (lex.getType() == INT || lex.getType() == DBL) {
+			if (lex.getType() == INT || lex.getType() == DBL || lex.getType() == VAR) {
 				res.push(lex);
 			}
 			if (lex.getType() == OP || lex.getType() == UNOP || lex.getType() == EOE) {
@@ -112,7 +112,7 @@ queue<Lexeme> Arithmetic::toModifiedPostfix(queue<Lexeme> inf) {
 		while (!inf.empty()) {
 			lex = inf.front();
 			while (lex.getType() != EOE) {
-				if (lex.getType() == INT || lex.getType() == DBL) {
+				if (lex.getType() == INT || lex.getType() == DBL || lex.getType() == VAR) {
 					res.push(lex);
 					//printS(st);	print(res);
 				}
