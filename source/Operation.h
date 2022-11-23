@@ -35,6 +35,11 @@ public:
 	double calc(double l, double r) override { return r; }
 };
 
+class asg : public Operation {
+public:
+	double calc(double l, double r) override { return r; }
+};
+
 
 class OPFactory {
 public:
@@ -43,6 +48,7 @@ public:
 		if (str == "-") return new sub;
 		if (str == "*") return new mul;
 		if (str == "/") return new divO;
+		if (str == "=") return new asg;
 		return new none;
 	}
 };

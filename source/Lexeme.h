@@ -26,6 +26,7 @@ public:
 	}
 	int getPriority() {
 		if (type == OP) {
+			if (str == "=") return -1;
 			if (str == "(") return 0;
 			if (str == ")") return 1;
 			if (str == "+" || str == "-") return 2;
@@ -35,8 +36,8 @@ public:
 			if (str == "+" || str == "-") return 4;
 		}
 		if (type == EOE) {
-			return -1;
+			return -2;
 		}
-		return -2;
+		return -3;
 	}
 };

@@ -11,7 +11,7 @@ queue<Lexeme> Arithmetic::lex(string inp) {
 		inp = inp + " ";
 		int i, start;
 		string buff = "";
-		string OPS = "+-*/()";
+		string OPS = "+-*/()=";
 		string UNOPS = "+-";
 		string sep = " \t\n";
 

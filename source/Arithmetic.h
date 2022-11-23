@@ -1,9 +1,21 @@
 #include <queue>
+#include <map>
 
 #include "Lexeme.h"
 
 
 class Arithmetic {
+	map<string, double> memory;
+	double load(string str) {
+		return memory[str];
+	}
+	double store(string str, double val) {
+		memory[str] = val;
+		return val;
+	}
+	bool init(string str) {
+		return memory.find(str) != memory.end();
+	}
 public:
 	//lexicaal analysis
 	queue<Lexeme> lex(string inp);

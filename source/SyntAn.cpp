@@ -18,8 +18,13 @@ void Arithmetic::Validate(queue<Lexeme> inf) {
 
 			if (prev.getType() == UNOP && lex.getType() == OP) throw new OPConflict(lex, "OP after UNOP");
 			//else if (prev.getType() == OP && lex.getType() == OP) throw new OPConflict(lex, "OP after OP"); //не считать () за OP
-			if ((prev.getType() == INT || prev.getType() == DBL) &&
-				(lex.getType() == INT || lex.getType() == DBL)) throw new ArgsEx(lex, "Extra arg");
+			if ((prev.getType() >= INT && prev.getType() <= VAR) && lex.getType() >= INT && lex.getType() <= VAR) throw new ArgsEx(lex, "Extra arg");
+
+			if (lex.getType() == VAR) {
+				if (!init(lex.getStr()))
+					store(lex.getStr(), 0);
+			}
+			//E OP V = E; not OK
 
 			prev = lex;
 			inf.pop();
