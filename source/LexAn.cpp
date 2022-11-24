@@ -29,7 +29,7 @@ queue<Lexeme> Arithmetic::lex(string inp) {
 				}
 				if (c == '.') {
 					start = i;
-					buff = "0.";
+					buff = c;
 					st = 3;
 					break;
 				}
@@ -112,7 +112,7 @@ queue<Lexeme> Arithmetic::lex(string inp) {
 				}
 				if (c == '.') {
 					start = i;
-					buff = "0.";
+					buff = c;
 					st = 3;
 					break;
 				}
